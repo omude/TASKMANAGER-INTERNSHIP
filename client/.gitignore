@@ -1,4 +1,4 @@
-# Logs
+git rm -r --cached client/node_modules# Logs
 logs
 *.log
 npm-debug.log*
