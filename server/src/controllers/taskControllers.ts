@@ -91,11 +91,26 @@ export const getTasks = async (
       return;
     }
 
-    const tasks = await Task.find({
-      user: req.user._id,
-    }).sort({
-      createdAt: -1,
-    });
+    const search = req.query.search?.toString().trim();
+    let tasks;
+
+    if (search) {
+      tasks = await Task.find({
+        user: req.user._id,
+        $or: [
+          { title: { $regex: search, $options: "i" } },
+          { description: { $regex: search, $options: "i" } },
+        ],
+      }).sort({
+        createdAt: -1,
+      });
+    } else {
+      tasks = await Task.find({
+        user: req.user._id,
+      }).sort({
+        createdAt: -1,
+      });
+    }
 
     res.status(200).json({
       count: tasks.length,
